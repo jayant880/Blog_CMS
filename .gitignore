@@ -1,0 +1,12 @@
+# Common
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
