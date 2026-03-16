@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import blogRoutes from "./routes/blogRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ mongoose
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/posts", blogRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });

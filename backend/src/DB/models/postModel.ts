@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
 
-const schema = new mongoose.Schema({
-  title: String,
-  content: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
+const schema = new mongoose.Schema(
+  {
+    title: String,
+    content: String,
   },
-});
+  { timestamps: true },
+);
 
 const Post = mongoose.model("Post", schema);
 
