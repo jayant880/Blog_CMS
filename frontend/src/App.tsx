@@ -1,5 +1,11 @@
+import PostList from "./components/PostList";
+
 const App = () => {
-  return <div className="text-2xl">App</div>;
+  return (
+    <div>
+      <PostList />
+    </div>
+  );
 };
 
 export default App;
