@@ -51,12 +51,24 @@ export const updatePostById = async (req: Request, res: Response) => {
     const post = await Post.findByIdAndUpdate(
       postId,
       { title, content },
-      { new: true }
+      { new: true },
     );
     if (!post) return res.status(404).json({ message: "post not found" });
     return res.status(200).json({ message: "post updated successfully", post });
   } catch (error) {
     console.error("Error updating post:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deletePostById = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findByIdAndDelete(postId);
+    if (!post) return res.status(404).json({ message: "post not found" });
+    return res.status(200).json({ message: "post deleted successfully", post });
+  } catch (error) {
+    console.error("Error deleting post:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

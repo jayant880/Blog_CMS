@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 const PostDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -39,6 +40,22 @@ const PostDetails = () => {
       }
     } catch (error) {
       console.error("Error updating post:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    try {
+      setIsLoading(true);
+      const res = await axios.delete(`http://localhost:3000/api/posts/${id}`);
+      if (res.data.post) {
+        console.log("post deleted successfully");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,12 +107,20 @@ const PostDetails = () => {
               <p className="mb-4 text-gray-600 whitespace-pre-wrap">
                 {content}
               </p>
-              <button
-                onClick={() => setEditMode(true)}
-                className="bg-blue-500 p-2 px-4 rounded-md text-white cursor-pointer"
-              >
-                Edit
-              </button>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setEditMode(true)}
+                  className="bg-blue-500 p-2 px-4 rounded-md text-white cursor-pointer"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete()}
+                  className="bg-red-500 p-2 px-4 rounded-md text-white cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           )}
         </div>
