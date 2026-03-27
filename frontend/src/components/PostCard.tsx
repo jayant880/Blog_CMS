@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 interface Post {
   _id: string;
   title: string;
@@ -6,18 +8,22 @@ interface Post {
 
 const PostCard = ({ post }: { post: Post }) => {
   return (
-    <div className="shadow-md p-6 border border-gray-200 rounded-xl flex flex-col justify-between bg-white hover:shadow-lg transition-shadow">
+    <div className="flex flex-col justify-between bg-white shadow-md hover:shadow-lg p-6 border border-gray-200 rounded-xl transition-shadow">
       <div>
         <h2 className="mb-3 font-bold text-xl line-clamp-2">{post.title}</h2>
-        <p className="text-gray-600 mb-4 whitespace-pre-wrap">
+        <p className="mb-4 text-gray-600 whitespace-pre-wrap">
           {post.content.substring(0, 100) +
             (post.content.length > 100 ? "..." : "")}
         </p>
+        <p className="font-light text-gray-300">{post._id}</p>
       </div>
       {post.content.length > 100 && (
-        <button className="text-blue-600 font-semibold self-start hover:text-blue-800 transition-colors">
+        <Link
+          to={`/post/${post._id}`}
+          className="self-start font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+        >
           Read More
-        </button>
+        </Link>
       )}
     </div>
   );
