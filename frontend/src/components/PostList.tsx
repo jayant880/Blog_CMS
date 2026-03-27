@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
+import { Link } from "react-router";
 
 interface Post {
   _id: string;
@@ -18,17 +19,22 @@ const PostList = () => {
     fetchPost();
   }, []);
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Latest Posts</h1>
+    <div className="mx-auto px-4 py-8 container">
+      <h1 className="mb-8 font-bold text-3xl text-center">Latest Posts</h1>
       {posts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <PostCard key={post._id} post={post} />
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">No posts found</p>
+        <p className="text-gray-500 text-center">No posts found</p>
       )}
+      <div className="mt-8">
+        <Link to={"/create-post"} className="text-blue-500 hover:text-blue-600">
+          Create Post
+        </Link>
+      </div>
     </div>
   );
 };

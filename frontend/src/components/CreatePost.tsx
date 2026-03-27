@@ -1,0 +1,79 @@
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+
+const CreatePost = () => {
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await axios.post("http://localhost:3000/api/posts", {
+      title,
+      content,
+    });
+    if (!res.data.post) {
+      console.log("Error creating post");
+      return;
+    }
+    console.log("Post created successfully");
+    setTitle("");
+    setContent("");
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      navigate(`/post/${res.data.post._id}`);
+    }, 2000);
+  };
+  return (
+    <div className="mx-auto px-4 py-8 container">
+      <h1 className="mb-8 font-bold text-3xl text-center">Create Post</h1>
+      {showSuccess && (
+        <div className="bg-green-500 p-2 rounded-md text-white">
+          Post created successfully
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="title" className="font-medium">
+            Title :
+          </label>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md"
+            min={3}
+            max={100}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="content" className="font-medium">
+            Content :
+          </label>
+          <textarea
+            placeholder="Content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md resize-none"
+            rows={10}
+          />
+        </div>
+        <button className="bg-blue-500 p-2 rounded-md text-white">
+          Create Post
+        </button>
+      </form>
+
+      <div className="mt-8">
+        <Link to={"/"} className="text-blue-500 hover:text-blue-600">
+          Back to Home
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default CreatePost;
