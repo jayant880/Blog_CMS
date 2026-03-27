@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -61,14 +61,14 @@ const PostDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-auto px-4 py-8 container">
+      <div>
         <p className="text-gray-500 text-center">Loading post...</p>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto px-4 py-8 container">
+    <div>
       {title ? (
         <div>
           {editMode ? (
@@ -127,14 +127,7 @@ const PostDetails = () => {
       ) : (
         <p>Post not found</p>
       )}
-      <div>
-        <Link
-          to={"/"}
-          className="inline-block mt-4 text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          Back to Posts
-        </Link>
-      </div>
+
     </div>
   );
 };

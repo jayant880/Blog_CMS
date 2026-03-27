@@ -19,7 +19,7 @@ const PostList = () => {
     fetchPost();
   }, []);
   return (
-    <div className="mx-auto px-4 py-8 container">
+    <div>
       <h1 className="mb-8 font-bold text-3xl text-center">Latest Posts</h1>
       {posts.length > 0 ? (
         <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -30,11 +30,6 @@ const PostList = () => {
       ) : (
         <p className="text-gray-500 text-center">No posts found</p>
       )}
-      <div className="mt-8">
-        <Link to={"/create-post"} className="text-blue-500 hover:text-blue-600">
-          Create Post
-        </Link>
-      </div>
     </div>
   );
 };

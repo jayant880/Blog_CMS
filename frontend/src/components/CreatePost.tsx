@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -8,7 +8,7 @@ const CreatePost = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
   
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:3000/api/posts", {
@@ -27,7 +27,7 @@ const CreatePost = () => {
     }
   };
   return (
-    <div className="mx-auto px-4 py-8 container">
+    <div>
       <h1 className="mb-8 font-bold text-3xl text-center">Create Post</h1>
       {showSuccess && (
         <div className="bg-green-500 p-2 rounded-md text-white">
@@ -66,11 +66,7 @@ const CreatePost = () => {
         </button>
       </form>
 
-      <div className="mt-8">
-        <Link to={"/"} className="text-blue-500 hover:text-blue-600">
-          Back to Home
-        </Link>
-      </div>
+
     </div>
   );
 };
