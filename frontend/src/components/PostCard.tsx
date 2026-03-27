@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 interface Post {
   _id: string;
@@ -7,8 +7,14 @@ interface Post {
 }
 
 const PostCard = ({ post }: { post: Post }) => {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col justify-between bg-white shadow-md hover:shadow-lg p-6 border border-gray-200 rounded-xl transition-shadow">
+    <div
+      className="flex flex-col justify-between bg-white shadow-md hover:shadow-blue-400 hover:shadow-lg p-6 border border-gray-200 rounded-xl transition-shadow cursor-pointer"
+      onClick={() => {
+        navigate(`/post/${post._id}`);
+      }}
+    >
       <div>
         <h2 className="mb-3 font-bold text-xl line-clamp-2">{post.title}</h2>
         <p className="mb-4 text-gray-600 whitespace-pre-wrap">
@@ -17,14 +23,6 @@ const PostCard = ({ post }: { post: Post }) => {
         </p>
         <p className="font-light text-gray-300">{post._id}</p>
       </div>
-      {post.content.length > 100 && (
-        <Link
-          to={`/post/${post._id}`}
-          className="self-start font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          Read More
-        </Link>
-      )}
     </div>
   );
 };

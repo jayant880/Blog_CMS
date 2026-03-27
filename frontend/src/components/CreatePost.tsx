@@ -10,22 +10,21 @@ const CreatePost = () => {
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await axios.post("http://localhost:3000/api/posts", {
-      title,
-      content,
-    });
-    if (!res.data.post) {
-      console.log("Error creating post");
-      return;
+    try {
+      const res = await axios.post("http://localhost:3000/api/posts", {
+        title,
+        content,
+      });
+      if (res.data.post) {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          navigate(`/post/${res.data.post._id}`);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
     }
-    console.log("Post created successfully");
-    setTitle("");
-    setContent("");
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      navigate(`/post/${res.data.post._id}`);
-    }, 2000);
   };
   return (
     <div className="mx-auto px-4 py-8 container">
@@ -46,8 +45,8 @@ const CreatePost = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="p-2 border border-gray-300 rounded-md"
-            min={3}
-            max={100}
+            minLength={3}
+            maxLength={100}
           />
         </div>
         <div className="flex flex-col gap-2">
