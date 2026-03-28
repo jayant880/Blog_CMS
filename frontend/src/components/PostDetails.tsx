@@ -1,6 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css";
+import SimpleMdeReact from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -9,6 +14,10 @@ const PostDetails = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const onChange = useCallback((value: string) => {
+    setContent(value);
+  }, []);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -88,11 +97,7 @@ const PostDetails = () => {
                 <label htmlFor="content" className="font-medium">
                   Content :
                 </label>
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="p-2 border border-gray-300 rounded-md"
-                />
+                <SimpleMdeReact value={content} onChange={onChange} />
               </div>
               <button
                 onClick={() => handleSave()}
@@ -104,9 +109,11 @@ const PostDetails = () => {
           ) : (
             <div>
               <h1 className="mb-4 font-bold text-3xl">{title}</h1>
-              <p className="mb-4 text-gray-600 whitespace-pre-wrap">
-                {content}
-              </p>
+              <div className="mb-4 text-gray-800 markdown-body prose max-w-none">
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                  {content}
+                </ReactMarkdown>
+              </div>
               <div className="flex gap-4">
                 <button
                   onClick={() => setEditMode(true)}

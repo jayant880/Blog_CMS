@@ -1,13 +1,19 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import "easymde/dist/easymde.min.css";
 import { useNavigate } from "react-router";
+import SimpleMdeReact from "react-simplemde-editor";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
-  
+
+  const onChange = useCallback((value: string) => {
+    setContent(value);
+  }, []);
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -53,20 +59,12 @@ const CreatePost = () => {
           <label htmlFor="content" className="font-medium">
             Content :
           </label>
-          <textarea
-            placeholder="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md resize-none"
-            rows={10}
-          />
+          <SimpleMdeReact value={content} onChange={onChange} />
         </div>
         <button className="bg-blue-500 p-2 rounded-md text-white">
           Create Post
         </button>
       </form>
-
-
     </div>
   );
 };

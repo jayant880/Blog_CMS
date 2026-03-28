@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import ReactMarkdown from "react-markdown";
 
 interface Post {
   _id: string;
@@ -17,10 +18,11 @@ const PostCard = ({ post }: { post: Post }) => {
     >
       <div>
         <h2 className="mb-3 font-bold text-xl line-clamp-2">{post.title}</h2>
-        <p className="mb-4 text-gray-600 whitespace-pre-wrap">
-          {post.content.substring(0, 100) +
-            (post.content.length > 100 ? "..." : "")}
-        </p>
+        <div className="mb-4 text-gray-600 prose prose-sm line-clamp-3">
+          <ReactMarkdown>
+            {post.content}
+          </ReactMarkdown>
+        </div>
         <p className="font-light text-gray-300">{post._id}</p>
       </div>
     </div>
