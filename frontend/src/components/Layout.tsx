@@ -42,13 +42,13 @@ export const Layout = () => {
             ) : (
               <>
                 <Link
-                  to="/login"
+                  to="/auth/login"
                   className="font-medium text-gray-600 hover:text-blue-600 transition"
                 >
                   Login
                 </Link>
                 <Link
-                  to="/register"
+                  to="/auth/register"
                   className="font-medium text-gray-600 hover:text-blue-600 transition"
                 >
                   Register

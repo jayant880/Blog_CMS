@@ -20,7 +20,7 @@ export const createPost = async (req: Request, res: Response) => {
     if (!title || !content) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const post = new Post({ title, content });
+    const post = new Post({ title, content, author: req.user.id });
     await post.save();
     return res.send({ message: "post created successfully", post });
   } catch (error) {
@@ -44,16 +44,22 @@ export const getPostById = async (req: Request, res: Response) => {
 export const updatePostById = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: "post not found" });
+
+    if (post.author.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
+
     const { title, content } = req.body;
     if (!title || !content) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const post = await Post.findByIdAndUpdate(
-      postId,
-      { title, content },
-      { new: true },
-    );
-    if (!post) return res.status(404).json({ message: "post not found" });
+
+    post.title = title;
+    post.content = content;
+    await post.save();
+
     return res.status(200).json({ message: "post updated successfully", post });
   } catch (error) {
     console.error("Error updating post:", error);
@@ -64,8 +70,14 @@ export const updatePostById = async (req: Request, res: Response) => {
 export const deletePostById = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-    const post = await Post.findByIdAndDelete(postId);
+
+    const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ message: "post not found" });
+
+    if (post.author.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    await Post.findByIdAndDelete(postId);
     return res.status(200).json({ message: "post deleted successfully", post });
   } catch (error) {
     console.error("Error deleting post:", error);

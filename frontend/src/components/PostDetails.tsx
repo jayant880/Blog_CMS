@@ -15,7 +15,8 @@ const PostDetails = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const [authorId, setAuthorId] = useState<string>("");
 
   const onChange = useCallback((value: string) => {
     setContent(value);
@@ -28,6 +29,7 @@ const PostDetails = () => {
         if (res.data.post) {
           setTitle(res.data.post.title);
           setContent(res.data.post.content);
+          setAuthorId(res.data.post.author);
         }
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -37,6 +39,8 @@ const PostDetails = () => {
     };
     fetchPost();
   }, [id]);
+
+  const isAuthor = isAuthenticated && user?.id === authorId;
 
   const handleSave = async () => {
     try {
@@ -111,12 +115,12 @@ const PostDetails = () => {
           ) : (
             <div>
               <h1 className="mb-4 font-bold text-3xl">{title}</h1>
-              <div className="mb-4 text-gray-800 markdown-body prose max-w-none">
+              <div className="mb-4 max-w-none text-gray-800 markdown-body prose">
                 <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
                   {content}
                 </ReactMarkdown>
               </div>
-              {isAuthenticated && (
+              {isAuthor && (
                 <div className="flex gap-4">
                   <button
                     onClick={() => setEditMode(true)}
@@ -138,7 +142,6 @@ const PostDetails = () => {
       ) : (
         <p>Post not found</p>
       )}
-
     </div>
   );
 };

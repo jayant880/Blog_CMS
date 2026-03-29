@@ -24,9 +24,8 @@ const Login = () => {
         username,
         password,
       });
-      // Store token
       if (res.data.token) {
-        login(res.data.token);
+        login(res.data.token, res.data.user);
         navigate("/");
       }
     } catch (error) {
@@ -38,29 +37,44 @@ const Login = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
+      <h2 className="mb-6 font-bold text-gray-800 text-2xl text-center">
+        Welcome Back
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="username" className="font-medium text-gray-700 text-sm">
+            Username
+          </label>
           <input
             type="text"
             id="username"
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+            placeholder="Enter your username"
           />
         </div>
-        <div>
-          <label htmlFor="password">Password</label>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="password" className="font-medium text-gray-700 text-sm">
+            Password
+          </label>
           <input
             type="password"
             id="password"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+            placeholder="Enter your password"
           />
         </div>
-        <button type="submit" disabled={disabled}>
-          Login
+        <button
+          type="submit"
+          disabled={disabled}
+          className="bg-blue-600 disabled:bg-blue-300 hover:bg-blue-700 mt-2 py-2 rounded-lg font-medium text-white transition cursor-pointer disabled:cursor-not-allowed"
+        >
+          {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>
