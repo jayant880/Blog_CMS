@@ -5,7 +5,7 @@ import {
   getPostById,
   updatePostById,
   deletePostById,
-} from "../controller/blogController.js";
+} from "../controllers/blogController.js";
 
 const router = Router();
 
