@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { useState, useCallback } from "react";
 import "easymde/dist/easymde.min.css";
 import { useNavigate } from "react-router";
@@ -17,7 +17,7 @@ const CreatePost = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/posts", {
+      const res = await axios.post("/posts", {
         title,
         content,
       });

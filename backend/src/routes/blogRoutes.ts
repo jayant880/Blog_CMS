@@ -6,13 +6,14 @@ import {
   updatePostById,
   deletePostById,
 } from "../controllers/blogController.js";
+import auth from "../middleware/authMiddleware.js";
 
 const router = Router();
 
 router.get("/", getPosts);
-router.post("/", createPost);
+router.post("/", auth, createPost);
 router.get("/:id", getPostById);
-router.put("/:id", updatePostById);
-router.delete("/:id", deletePostById);
+router.put("/:id", auth, updatePostById);
+router.delete("/:id", auth, deletePostById);
 
 export default router;

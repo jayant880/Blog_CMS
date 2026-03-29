@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 import ReactMarkdown from "react-markdown";
@@ -6,6 +6,7 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
+import { useAuthStore } from "../store/useAuthStore";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const PostDetails = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuthenticated } = useAuthStore();
 
   const onChange = useCallback((value: string) => {
     setContent(value);
@@ -22,7 +24,7 @@ const PostDetails = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/posts/${id}`);
+        const res = await axios.get(`/posts/${id}`);
         if (res.data.post) {
           setTitle(res.data.post.title);
           setContent(res.data.post.content);
@@ -38,7 +40,7 @@ const PostDetails = () => {
 
   const handleSave = async () => {
     try {
-      const res = await axios.put(`http://localhost:3000/api/posts/${id}`, {
+      const res = await axios.put(`/posts/${id}`, {
         title,
         content,
       });
@@ -56,7 +58,7 @@ const PostDetails = () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
     try {
       setIsLoading(true);
-      const res = await axios.delete(`http://localhost:3000/api/posts/${id}`);
+      const res = await axios.delete(`/posts/${id}`);
       if (res.data.post) {
         console.log("post deleted successfully");
         navigate("/");
@@ -114,20 +116,22 @@ const PostDetails = () => {
                   {content}
                 </ReactMarkdown>
               </div>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setEditMode(true)}
-                  className="bg-blue-500 p-2 px-4 rounded-md text-white cursor-pointer"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete()}
-                  className="bg-red-500 p-2 px-4 rounded-md text-white cursor-pointer"
-                >
-                  Delete
-                </button>
-              </div>
+              {isAuthenticated && (
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="bg-blue-500 p-2 px-4 rounded-md text-white cursor-pointer"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete()}
+                    className="bg-red-500 p-2 px-4 rounded-md text-white cursor-pointer"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

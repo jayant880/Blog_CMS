@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
-import { Link } from "react-router";
+
 
 interface Post {
   _id: string;
@@ -13,7 +13,7 @@ const PostList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await axios.get("http://localhost:3000/api/posts");
+      const res = await axios.get("/posts");
       setPosts(res.data.posts);
     };
     fetchPost();
