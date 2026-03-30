@@ -4,14 +4,19 @@ import { Request, Response } from "express";
 export const getPosts = async (req: Request, res: Response) => {
   try {
     const { tag } = req.query;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const page = parseInt(req.query.page as string) || 1;
+    const skip = (page - 1) * limit;
     const query = tag ? { tags: tag as string } : {};
+    const totalPosts = await Post.countDocuments(query);
+    const totalPages = Math.ceil(totalPosts / limit);
     const posts = await Post.find(query)
+      .skip(skip)
+      .limit(limit)
       .populate("author", "username")
       .sort({ createdAt: -1 });
 
-    return res
-      .status(200)
-      .json({ message: "posts fetched successfully", posts });
+    return res.status(200).json({ message: "posts fetched successfully", posts, totalPages, totalPosts, limit, page });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -21,7 +26,6 @@ export const getPosts = async (req: Request, res: Response) => {
 export const createPost = async (req: Request, res: Response) => {
   try {
     const { title, content, tags } = req.body;
-    console.log(tags);
     if (!title || !content) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -50,7 +54,6 @@ export const getPostById = async (req: Request, res: Response) => {
 export const updatePostById = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ message: "post not found" });
 
