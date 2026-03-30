@@ -3,10 +3,12 @@ import { useState, useCallback } from "react";
 import "easymde/dist/easymde.min.css";
 import { useNavigate } from "react-router";
 import SimpleMdeReact from "react-simplemde-editor";
+import CreatableSelect from "react-select/creatable";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const [tags, setTags] = useState<{ label: string; value: string }[]>([]);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -17,9 +19,11 @@ const CreatePost = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
+      console.log(title, content, tags);
       const res = await axios.post("/posts", {
         title,
         content,
+        tags: tags.map((tag) => tag.value),
       });
       if (res.data.post) {
         setShowSuccess(true);
@@ -60,6 +64,17 @@ const CreatePost = () => {
             Content :
           </label>
           <SimpleMdeReact value={content} onChange={onChange} />
+        </div>
+        <div className="z-50 relative flex flex-col gap-2">
+          <label htmlFor="tags" className="font-medium">
+            Tags :
+          </label>
+          <CreatableSelect
+            isMulti
+            value={tags}
+            onChange={(newValue) => setTags([...newValue])}
+            placeholder="Select or type tags"
+          />
         </div>
         <button className="bg-blue-500 p-2 rounded-md text-white">
           Create Post

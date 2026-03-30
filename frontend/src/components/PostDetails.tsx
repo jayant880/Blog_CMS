@@ -29,7 +29,12 @@ const PostDetails = () => {
         if (res.data.post) {
           setTitle(res.data.post.title);
           setContent(res.data.post.content);
-          setAuthorId(res.data.post.author);
+          const author = res.data.post.author;
+          setAuthorId(
+            typeof author === "object" && author !== null
+              ? (author._id as string)
+              : (author as string)
+          );
         }
       } catch (error) {
         console.error("Error fetching post:", error);

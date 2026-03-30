@@ -3,7 +3,11 @@ import { Request, Response } from "express";
 
 export const getPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const { tag } = req.query;
+    const query = tag ? { tags: tag as string } : {};
+    const posts = await Post.find(query)
+      .populate("author", "username")
+      .sort({ createdAt: -1 });
 
     return res
       .status(200)
@@ -16,11 +20,13 @@ export const getPosts = async (req: Request, res: Response) => {
 
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, tags } = req.body;
+    console.log(tags);
     if (!title || !content) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const post = new Post({ title, content, author: req.user.id });
+    if (tags) post.tags = tags;
     await post.save();
     return res.send({ message: "post created successfully", post });
   } catch (error) {
@@ -32,7 +38,7 @@ export const createPost = async (req: Request, res: Response) => {
 export const getPostById = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("author", "username");
     if (!post) return res.status(404).json({ message: "post not found" });
     return res.status(200).json({ message: "post fetched successfully", post });
   } catch (error) {
@@ -81,6 +87,16 @@ export const deletePostById = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "post deleted successfully", post });
   } catch (error) {
     console.error("Error deleting post:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getTags = async (req: Request, res: Response) => {
+  try {
+    const tags = await Post.distinct("tags");
+    return res.status(200).json({ message: "tags fetched successfully", tags });
+  } catch (error) {
+    console.error("Error fetching tags:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

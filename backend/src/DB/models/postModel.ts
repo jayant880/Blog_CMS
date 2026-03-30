@@ -9,6 +9,10 @@ const schema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true },
 );
