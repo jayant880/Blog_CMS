@@ -7,6 +7,7 @@ import "highlight.js/styles/github.css";
 import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useAuthStore } from "../store/useAuthStore";
+import Comments from "./Comments";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const PostDetails = () => {
           setAuthorId(
             typeof author === "object" && author !== null
               ? (author._id as string)
-              : (author as string)
+              : (author as string),
           );
         }
       } catch (error) {
@@ -78,6 +79,8 @@ const PostDetails = () => {
       setIsLoading(false);
     }
   };
+
+
 
   if (isLoading) {
     return (
@@ -143,6 +146,7 @@ const PostDetails = () => {
               )}
             </div>
           )}
+          {id && <Comments postId={id} />}
         </div>
       ) : (
         <p>Post not found</p>

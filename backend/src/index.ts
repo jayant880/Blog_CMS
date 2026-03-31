@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import blogRoutes from "./routes/blogRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 import { getTags } from "./controllers/blogController.js";
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts/tags", getTags);
 app.use("/api/posts", blogRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
