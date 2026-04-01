@@ -16,7 +16,14 @@ export const getPosts = async (req: Request, res: Response) => {
       .populate("author", "username")
       .sort({ createdAt: -1 });
 
-    return res.status(200).json({ message: "posts fetched successfully", posts, totalPages, totalPosts, limit, page });
+    return res.status(200).json({
+      message: "posts fetched successfully",
+      posts,
+      totalPages,
+      totalPosts,
+      limit,
+      page,
+    });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -100,6 +107,22 @@ export const getTags = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "tags fetched successfully", tags });
   } catch (error) {
     console.error("Error fetching tags:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const searchPosts = async (req: Request, res: Response) => {
+  try {
+    const q = req.query.q as string;
+    if (!q) return res.status(400).json({ message: "Query is required" });
+    const posts = await Post.find({ $text: { $search: q } })
+      .populate("author", "username")
+      .sort({ score: { $meta: "textScore" } });
+    return res
+      .status(200)
+      .json({ message: "posts fetched successfully", posts });
+  } catch (error) {
+    console.error("Error searching posts:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

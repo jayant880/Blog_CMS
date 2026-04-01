@@ -16,6 +16,7 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+schema.index({ title: "text", content: "text" });
 
 const Post = mongoose.model("Post", schema);
 

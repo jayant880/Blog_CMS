@@ -1,9 +1,18 @@
 import { Link, Outlet, useNavigate } from "react-router";
 import { useAuthStore } from "../store/useAuthStore";
+import { useState } from "react";
 
 export const Layout = () => {
   const { isAuthenticated, logout } = useAuthStore();
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  const handleSearch = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -17,7 +26,16 @@ export const Layout = () => {
           <Link to="/" className="font-sans font-bold text-blue-600 text-xl">
             My CMS Blog
           </Link>
-          <div className="flex gap-4 items-center">
+          <form onSubmit={handleSearch} className="flex-1 mx-4 max-w-sm">
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-4 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+            />
+          </form>
+          <div className="flex items-center gap-4">
             <Link
               to="/"
               className="font-medium text-gray-600 hover:text-blue-600 transition"

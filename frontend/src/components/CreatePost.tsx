@@ -19,7 +19,6 @@ const CreatePost = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      console.log(title, content, tags);
       const res = await axios.post("/posts", {
         title,
         content,

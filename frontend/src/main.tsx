@@ -9,6 +9,7 @@ import { Layout } from "./components/Layout.tsx";
 import Login from "./components/auth/Login.tsx";
 import Register from "./components/auth/Register.tsx";
 import AuthLayout from "./components/auth/AuthLayout.tsx";
+import SearchResults from "./components/SearchResult.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,11 +19,13 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<App />} />
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/search" element={<SearchResults />} />
         </Route>
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
+        ``
       </Routes>
     </BrowserRouter>
   </StrictMode>,
