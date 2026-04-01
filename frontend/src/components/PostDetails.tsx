@@ -1,4 +1,5 @@
 import axios from "../utils/axios";
+import { Helmet } from "react-helmet-async";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 import ReactMarkdown from "react-markdown";
@@ -80,8 +81,6 @@ const PostDetails = () => {
     }
   };
 
-
-
   if (isLoading) {
     return (
       <div>
@@ -92,6 +91,15 @@ const PostDetails = () => {
 
   return (
     <div>
+      {title && (
+        <Helmet>
+          <title>{`${title} | My CMS Blog`}</title>
+          <meta
+            name="description"
+            content={content.substring(0, 150).replace(/#/g, "") + "..."}
+          />
+        </Helmet>
+      )}
       {title ? (
         <div>
           {editMode ? (

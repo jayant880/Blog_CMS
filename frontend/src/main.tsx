@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
+import { HelmetProvider } from "react-helmet-async";
 import "./index.css";
 import App from "./App.tsx";
 import PostDetails from "./components/PostDetails.tsx";
@@ -13,7 +14,8 @@ import SearchResults from "./components/SearchResult.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<App />} />
@@ -28,5 +30,6 @@ createRoot(document.getElementById("root")!).render(
         ``
       </Routes>
     </BrowserRouter>
+    </HelmetProvider>
   </StrictMode>,
 );
