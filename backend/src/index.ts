@@ -40,7 +40,12 @@ app.use(express.json());
 
 app.use(async (req, res, next) => {
   try {
-    if (!MONGODB_URI) return next();
+    if (!MONGODB_URI) {
+      if (req.path === "/health") return next();
+      return res
+        .status(500)
+        .json({ message: "DATABASE_URI is not configured on the server" });
+    }
     if (req.path === "/health") return next();
     await ensureMongoConnected();
     return next();
