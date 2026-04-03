@@ -13,18 +13,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.DATABASE_URI;
 
-if (!MONGODB_URI) {
-  throw new Error("Please provide a MongoDB URI");
+if (MONGODB_URI) {
+  mongoose
+    .connect(MONGODB_URI)
+    .then(() => {
+      console.log("MongoDB connected");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+} else {
+  console.warn("DATABASE_URI is not set; skipping MongoDB connection");
 }
-
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log("MongoDB connected");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 app.use(cors());
 app.use(express.json());
