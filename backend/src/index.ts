@@ -13,21 +13,41 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.DATABASE_URI;
 
-if (MONGODB_URI) {
-  mongoose
-    .connect(MONGODB_URI)
-    .then(() => {
-      console.log("MongoDB connected");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-} else {
-  console.warn("DATABASE_URI is not set; skipping MongoDB connection");
+let mongoConnectPromise: Promise<typeof mongoose> | null = null;
+async function ensureMongoConnected() {
+  if (!MONGODB_URI) return;
+  if (mongoose.connection.readyState === 1) return;
+
+  if (!mongoConnectPromise) {
+    mongoConnectPromise = mongoose
+      .connect(MONGODB_URI)
+      .then((m) => {
+        console.log("MongoDB connected");
+        return m;
+      })
+      .catch((err) => {
+        mongoConnectPromise = null;
+        console.log(err);
+        throw err;
+      });
+  }
+
+  await mongoConnectPromise;
 }
 
 app.use(cors());
 app.use(express.json());
+
+app.use(async (req, res, next) => {
+  try {
+    if (!MONGODB_URI) return next();
+    if (req.path === "/health") return next();
+    await ensureMongoConnected();
+    return next();
+  } catch {
+    return res.status(500).json({ message: "Database connection failed" });
+  }
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts/tags", getTags);
